@@ -13,7 +13,7 @@ $Title = "Impressoras" # Título do menu
 # Lista com os elementos para a criação do menu
 $listMenuElements = @("               $Title                    ", "============================================", 
 								"1 - Pesquisar impressora", "2 - Listar impressoras", "Q - Sair")
-$server = "10.39.0.126"
+$server = "SERVER_IP"
 $r = '(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)'
 
 function list-printers($subtitle){ 
