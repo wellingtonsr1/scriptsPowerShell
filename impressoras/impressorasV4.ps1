@@ -6,7 +6,7 @@
 #| - Windows 10(x64)		                    				 		                                            |
 #+-------------------------------------------------IMPORTANTE-------------------------------------------------------+
 #| - Precisa ser salvo na unidade C:\	                                                                            |
-#| - Executar o 'impressoras.bat'                                                                                   |								               
+#| - Clicar com o direito, Executar com o powershell                                                                                   |								               
 #+------------------------------------------------------------------------------------------------------------------+
 
 $Title = "Impressoras" # Título do menu
@@ -18,12 +18,14 @@ $r = '(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[0
 
 
 # Retirado de https://github.com/LeDragoX/Win-10-Smart-Debloat-Tools
-If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) { 
-	Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs; exit
+function Request-PrivilegesElevation(){
+	If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) { 
+		Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs; exit
+	}
 }
 
 
-function list-printers($subtitle){ 
+function List-Printers($subtitle){ 
 	Clear-Host
 	Write-Host "============================================" 
 	Write-Host "               $($subtitle)                 "
@@ -48,7 +50,7 @@ function list-printers($subtitle){
 	Read-Host -Prompt "Pressione ENTER para continuar"
 }
 
-function search-printer($subtitle){
+function Search-Printer($subtitle){
 	do{
 		Clear-Host
 		Write-Host "============================================"
@@ -94,19 +96,23 @@ function search-printer($subtitle){
 	}
 }
 
-do{
-	Clear-Host
-	# Cria o menu
-	Write-Host "============================================" 
-	forEach ($element in $listMenuElements){
-		Write-Host $element 
-	}
-	Write-Host "============================================" 
-	$choice = Read-Host "Escolha uma opção"
-    switch ($choice){
-		'1' {search-printer -subtitle "Pesquisar impressora"} 
-		'2' {list-printers -subtitle "Listar impressora"} 
-    }
- }until($choice -eq 'q')
- 
+function Create-Menu(){
+	Request-PrivilegesElevation
 
+	do{
+		Clear-Host
+		# Cria o menu
+		Write-Host "============================================" 
+		forEach ($element in $listMenuElements){
+			Write-Host $element 
+		}
+		Write-Host "============================================" 
+		$choice = Read-Host "Escolha uma opção"
+		switch ($choice){
+			'1' {Search-Printer -subtitle "Pesquisar impressora"} 
+			'2' {List-Printers -subtitle "Listar impressora"} 
+		}
+	}until($choice -eq 'q')
+ }
+
+Create-Menu
