@@ -16,12 +16,12 @@ $listMenuElements = @("               $Title                    ", "============
 $server = "SERVER_IP"
 $r = '(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)'
 
-function Request-PrivilegesElevation() {
-    # Used from https://github.com/LeDragoX/Win-10-Smart-Debloat-Tools
-    If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) { 
-        Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs; exit
-    }
+
+# Retirado de https://github.com/LeDragoX/Win-10-Smart-Debloat-Tools
+If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) { 
+	Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs; exit
 }
+
 
 function list-printers($subtitle){ 
 	Clear-Host
@@ -95,8 +95,6 @@ function search-printer($subtitle){
 }
 
 do{
-	Request-PrivilegesElevation
-
 	Clear-Host
 	# Cria o menu
 	Write-Host "============================================" 
@@ -111,4 +109,4 @@ do{
     }
  }until($choice -eq 'q')
  
- #Set-ExecutionPolicy -ExecutionPolicy Default -Scope Process -Force
+
