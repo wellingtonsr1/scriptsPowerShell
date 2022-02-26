@@ -16,6 +16,13 @@ $listMenuElements = @("               $Title                    ", "============
 $server = "SERVER_IP"
 $r = '(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)'
 
+function Request-PrivilegesElevation() {
+    # Used from https://github.com/LeDragoX/Win-10-Smart-Debloat-Tools
+    If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) { 
+        Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs; exit
+    }
+}
+
 function list-printers($subtitle){ 
 	Clear-Host
 	Write-Host "============================================" 
@@ -58,7 +65,7 @@ function search-printer($subtitle){
 	# Retornou algum valor?
 	if(!$data){
 		Write-Host ""
-		Write-Host "Impressora nao encontrada!" -ForegroundColor yellow
+		Write-Host "Impressora não encontrada!" -ForegroundColor yellow
 		Write-Host "============================================" 
 		Write-Host ""
 		Read-Host -Prompt "Pressione ENTER para continuar"
@@ -81,13 +88,15 @@ function search-printer($subtitle){
 		Write-Host "============================================" 
 		Write-Host ""
 		
-		$choice = Read-Host -Prompt "Abrir pagina web da impressora? (S/N)" 
+		$choice = Read-Host -Prompt "Abrir página web da impressora? (S/N)" 
 		# Abre a página web da impressora
 		if($choice -eq 's'){start "http://$($ipAddress)"}
 	}
 }
 
 do{
+	Request-PrivilegesElevation
+
 	Clear-Host
 	# Cria o menu
 	Write-Host "============================================" 
@@ -95,11 +104,11 @@ do{
 		Write-Host $element 
 	}
 	Write-Host "============================================" 
-	$choice = Read-Host "Escolha uma opcao"
+	$choice = Read-Host "Escolha uma opção"
     switch ($choice){
 		'1' {search-printer -subtitle "Pesquisar impressora"} 
 		'2' {list-printers -subtitle "Listar impressora"} 
     }
  }until($choice -eq 'q')
  
- Set-ExecutionPolicy -ExecutionPolicy Default -Scope Process -Force
+ #Set-ExecutionPolicy -ExecutionPolicy Default -Scope Process -Force
